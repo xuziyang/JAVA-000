@@ -162,9 +162,9 @@ Xmx   |          CMS |    G1  |
 3. 2g内存时，ParallelGC的吞吐量最大
 4. 4g内存时，G1的吞吐量超过了ParallelGC，还挺意外的
 5. 512m、1g、2g内存时，CMS和G1的吞吐量相差不大；4g内存时，G1的吞吐量明显大于CMS
-6. 在这4种规格堆内存设置下，G1的延迟都比CMS要低
+6. 在512、1g、2g、4g内存设置下，G1的延迟都比CMS要低
 
 
 
 
-使用压测工具（wrk或sb），演练gateway-server-0.0.1-SNAPSHOT.jar 示例。结果差距不大，没啥参考意义。x
+使用压测工具（wrk或sb），演练gateway-server-0.0.1-SNAPSHOT.jar 示例。结果差距不大，没啥参考意义。
