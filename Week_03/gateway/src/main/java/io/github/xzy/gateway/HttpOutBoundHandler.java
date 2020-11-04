@@ -1,0 +1,71 @@
+package io.github.xzy.gateway;
+
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpUtil;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+public class HttpOutBoundHandler {
+
+	private static Logger logger = LoggerFactory.getLogger(HttpOutBoundHandler.class);
+
+	private static final String BACK_URL = "http://localhost:8801";
+
+	public void handler(ChannelHandlerContext ctx, FullHttpRequest fullRequest) {
+		FullHttpResponse fullHttpResponse = null;
+		try {
+			fullHttpResponse = doRequestBack();
+		} catch (Exception e) {
+			//logger.error("处理测试接口出错", e);
+			fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, NO_CONTENT);
+			exceptionCaught(ctx, e);
+		} finally {
+			if (fullRequest != null) {
+				if (!HttpUtil.isKeepAlive(fullRequest)) {
+					ctx.write(fullHttpResponse).addListener(ChannelFutureListener.CLOSE);
+				} else {
+					fullHttpResponse.headers().set(CONNECTION, KEEP_ALIVE);
+					ctx.write(fullHttpResponse);
+				}
+			}
+		}
+	}
+
+	private FullHttpResponse doRequestBack() throws IOException {
+		// 创建http GET请求
+		HttpGet httpGet = new HttpGet(BACK_URL);
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
+			// 判断返回状态是否为200
+			byte[] body = EntityUtils.toByteArray(response.getEntity());
+			FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
+			fullHttpResponse.headers().set("Content-Type", "application/json");
+			fullHttpResponse.headers().setInt("Content-Length", body.length);
+			return fullHttpResponse;
+		}
+	}
+
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+		cause.printStackTrace();
+		ctx.close();
+	}
+
+}
