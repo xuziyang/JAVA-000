@@ -3,10 +3,7 @@ package io.github.xzy.gateway.outbound;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -16,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
@@ -32,7 +32,7 @@ public class HttpOutBoundHandler {
 	public void handler(ChannelHandlerContext ctx, FullHttpRequest fullRequest) {
 		FullHttpResponse fullHttpResponse = null;
 		try {
-			fullHttpResponse = doRequestBack();
+			fullHttpResponse = doRequestBack(fullRequest);
 		} catch (Exception e) {
 			//logger.error("处理测试接口出错", e);
 			fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, NO_CONTENT);
@@ -49,9 +49,11 @@ public class HttpOutBoundHandler {
 		}
 	}
 
-	private FullHttpResponse doRequestBack() throws IOException {
+	private FullHttpResponse doRequestBack(FullHttpRequest fullRequest) throws IOException {
 		// 创建http GET请求
 		HttpGet httpGet = new HttpGet(BACK_URL);
+		setHeaders(fullRequest, httpGet);
+
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
 			// 判断返回状态是否为200
@@ -59,7 +61,15 @@ public class HttpOutBoundHandler {
 			FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
 			fullHttpResponse.headers().set("Content-Type", "application/json");
 			fullHttpResponse.headers().setInt("Content-Length", body.length);
+
 			return fullHttpResponse;
+		}
+	}
+
+	private void setHeaders(FullHttpRequest fullRequest, HttpGet httpGet) {
+		List<Map.Entry<String, String>> entries = fullRequest.headers().entries();
+		for (Map.Entry<String, String> entry : entries) {
+			httpGet.addHeader(entry.getKey(),entry.getValue());
 		}
 	}
 
