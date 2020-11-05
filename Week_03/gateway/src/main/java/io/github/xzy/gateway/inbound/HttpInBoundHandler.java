@@ -1,5 +1,6 @@
-package io.github.xzy.gateway;
+package io.github.xzy.gateway.inbound;
 
+import io.github.xzy.gateway.outbound.HttpOutBoundHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;

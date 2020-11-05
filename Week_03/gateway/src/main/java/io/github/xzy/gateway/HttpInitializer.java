@@ -1,5 +1,6 @@
 package io.github.xzy.gateway;
 
+import io.github.xzy.gateway.inbound.HttpInBoundHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -8,6 +9,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
 
 public class HttpInitializer extends ChannelInitializer<SocketChannel> {
+
 	private final SslContext sslCtx;
 
 	public HttpInitializer(SslContext sslCtx) {

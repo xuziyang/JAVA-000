@@ -1,4 +1,4 @@
-package io.github.xzy.gateway;
+package io.github.xzy.gateway.outbound;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
