@@ -56,7 +56,6 @@ public class HttpOutBoundHandler {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-			// 判断返回状态是否为200
 			byte[] body = EntityUtils.toByteArray(response.getEntity());
 			FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
 			fullHttpResponse.headers().set("Content-Type", "application/json");
