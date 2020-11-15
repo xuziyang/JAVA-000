@@ -1,7 +1,5 @@
 package com.github.xzy.concurrency.semaphore;
 
-import sun.net.www.protocol.http.HttpURLConnection;
-
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
