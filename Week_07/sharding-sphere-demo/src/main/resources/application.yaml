@@ -1,0 +1,58 @@
+spring:
+  shardingsphere:
+    enabled: true
+    datasource:
+      names: db0, db1, db2
+      db0:
+        type: com.zaxxer.hikari.HikariDataSource # 使用 Hikari 数据库连接池
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/db0?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password:
+      db1:
+        type: com.zaxxer.hikari.HikariDataSource # 使用 Hikari 数据库连接池
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/db1?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password:
+      db2:
+        type: com.zaxxer.hikari.HikariDataSource # 使用 Hikari 数据库连接池
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/db2?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password:
+    sharding:
+      tables:
+        health_record:
+          actualDataNodes: db$->{0..1}.health_record
+          key-generator:
+            column: record_id
+            type: SNOWFLAKE
+          database-strategy:
+            inline:
+              algorithm-expression: db$->{record_id % 2}
+              sharding-column: record_id
+        health_task:
+          actual-data-nodes: db$->{0..2}.health_task
+          key-generator:
+            column: task_id
+            type: SNOWFLAKE
+          database-strategy:
+            inline:
+              algorithm-expression: db$->{task_id % 3}
+              sharding-column: task_id
+    props:
+      sql:
+        show: true
+
+
+
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/db0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+#    username: root
+#    password:
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+
