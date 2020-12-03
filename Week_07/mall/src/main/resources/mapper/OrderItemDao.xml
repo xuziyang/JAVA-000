@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.mall.dao.OrderItemDao">
+
+    <resultMap type="com.xzy.mall.entity.OrderItem" id="OrderItemMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+        <result property="orderSn" column="order_sn" jdbcType="VARCHAR"/>
+        <result property="productId" column="product_id" jdbcType="INTEGER"/>
+        <result property="productPic" column="product_pic" jdbcType="VARCHAR"/>
+        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+        <result property="productSn" column="product_sn" jdbcType="VARCHAR"/>
+        <result property="productPrice" column="product_price" jdbcType="INTEGER"/>
+        <result property="productQuantity" column="product_quantity" jdbcType="OTHER"/>
+        <result property="productSkuId" column="product_sku_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OrderItemMap">
+        select
+          id, order_id, order_sn, product_id, product_pic, product_name, product_sn, product_price, product_quantity, product_sku_id, create_time, update_time
+        from mall.order_item
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OrderItemMap">
+        select
+          id, order_id, order_sn, product_id, product_pic, product_name, product_sn, product_price, product_quantity, product_sku_id, create_time, update_time
+        from mall.order_item
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="OrderItemMap">
+        select
+        id, order_id, order_sn, product_id, product_pic, product_name, product_sn, product_price, product_quantity,
+        product_sku_id, create_time, update_time
+        from mall.order_item
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+            <if test="orderSn != null and orderSn != ''">
+                and order_sn = #{orderSn}
+            </if>
+            <if test="productId != null">
+                and product_id = #{productId}
+            </if>
+            <if test="productPic != null and productPic != ''">
+                and product_pic = #{productPic}
+            </if>
+            <if test="productName != null and productName != ''">
+                and product_name = #{productName}
+            </if>
+            <if test="productSn != null and productSn != ''">
+                and product_sn = #{productSn}
+            </if>
+            <if test="productPrice != null">
+                and product_price = #{productPrice}
+            </if>
+            <if test="productQuantity != null">
+                and product_quantity = #{productQuantity}
+            </if>
+            <if test="productSkuId != null">
+                and product_sku_id = #{productSkuId}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order_item(id,order_id, order_sn, product_id, product_pic, product_name, product_sn, product_price, product_quantity, product_sku_id, create_time, update_time)
+        values (#{id}, #{orderId}, #{orderSn}, #{productId}, #{productPic}, #{productName}, #{productSn}, #{productPrice}, #{productQuantity}, #{productSkuId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order_item(id, order_id, order_sn, product_id, product_pic, product_name, product_sn,
+        product_price, product_quantity, product_sku_id, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.orderId}, #{entity.orderSn}, #{entity.productId}, #{entity.productPic}, #{entity.productName},
+            #{entity.productSn}, #{entity.productPrice}, #{entity.productQuantity}, #{entity.productSkuId},
+            #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order_item(order_id, order_sn, product_id, product_pic, product_name, product_sn,
+        product_price, product_quantity, product_sku_id, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderId}, #{entity.orderSn}, #{entity.productId}, #{entity.productPic}, #{entity.productName},
+            #{entity.productSn}, #{entity.productPrice}, #{entity.productQuantity}, #{entity.productSkuId},
+            #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        order_id = values(order_id) , order_sn = values(order_sn) , product_id = values(product_id) , product_pic =
+        values(product_pic) , product_name = values(product_name) , product_sn = values(product_sn) , product_price =
+        values(product_price) , product_quantity = values(product_quantity) , product_sku_id = values(product_sku_id) ,
+        create_time = values(create_time) , update_time = values(update_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mall.order_item
+        <set>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="orderSn != null and orderSn != ''">
+                order_sn = #{orderSn},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId},
+            </if>
+            <if test="productPic != null and productPic != ''">
+                product_pic = #{productPic},
+            </if>
+            <if test="productName != null and productName != ''">
+                product_name = #{productName},
+            </if>
+            <if test="productSn != null and productSn != ''">
+                product_sn = #{productSn},
+            </if>
+            <if test="productPrice != null">
+                product_price = #{productPrice},
+            </if>
+            <if test="productQuantity != null">
+                product_quantity = #{productQuantity},
+            </if>
+            <if test="productSkuId != null">
+                product_sku_id = #{productSkuId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mall.order_item where id = #{id}
+    </delete>
+
+</mapper>

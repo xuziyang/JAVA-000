@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.mall.dao.SkuStockDao">
+
+    <resultMap type="com.xzy.mall.entity.SkuStock" id="SkuStockMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="productId" column="product_id" jdbcType="INTEGER"/>
+        <result property="skuCode" column="sku_code" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="INTEGER"/>
+        <result property="stock" column="stock" jdbcType="OTHER"/>
+        <result property="sp1" column="sp1" jdbcType="VARCHAR"/>
+        <result property="sp2" column="sp2" jdbcType="VARCHAR"/>
+        <result property="sp3" column="sp3" jdbcType="VARCHAR"/>
+        <result property="pic" column="pic" jdbcType="VARCHAR"/>
+        <result property="sale" column="sale" jdbcType="OTHER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SkuStockMap">
+        select
+          id, product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time, update_time
+        from mall.sku_stock
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SkuStockMap">
+        select
+          id, product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time, update_time
+        from mall.sku_stock
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SkuStockMap">
+        select
+        id, product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time, update_time
+        from mall.sku_stock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="productId != null">
+                and product_id = #{productId}
+            </if>
+            <if test="skuCode != null and skuCode != ''">
+                and sku_code = #{skuCode}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="stock != null">
+                and stock = #{stock}
+            </if>
+            <if test="sp1 != null and sp1 != ''">
+                and sp1 = #{sp1}
+            </if>
+            <if test="sp2 != null and sp2 != ''">
+                and sp2 = #{sp2}
+            </if>
+            <if test="sp3 != null and sp3 != ''">
+                and sp3 = #{sp3}
+            </if>
+            <if test="pic != null and pic != ''">
+                and pic = #{pic}
+            </if>
+            <if test="sale != null">
+                and sale = #{sale}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.sku_stock(product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time, update_time)
+        values (#{productId}, #{skuCode}, #{price}, #{stock}, #{sp1}, #{sp2}, #{sp3}, #{pic}, #{sale}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.sku_stock(product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time,
+        update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.productId}, #{entity.skuCode}, #{entity.price}, #{entity.stock}, #{entity.sp1}, #{entity.sp2},
+            #{entity.sp3}, #{entity.pic}, #{entity.sale}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.sku_stock(product_id, sku_code, price, stock, sp1, sp2, sp3, pic, sale, create_time,
+        update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.productId}, #{entity.skuCode}, #{entity.price}, #{entity.stock}, #{entity.sp1}, #{entity.sp2},
+            #{entity.sp3}, #{entity.pic}, #{entity.sale}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        product_id = values(product_id) , sku_code = values(sku_code) , price = values(price) , stock = values(stock) ,
+        sp1 = values(sp1) , sp2 = values(sp2) , sp3 = values(sp3) , pic = values(pic) , sale = values(sale) ,
+        create_time = values(create_time) , update_time = values(update_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mall.sku_stock
+        <set>
+            <if test="productId != null">
+                product_id = #{productId},
+            </if>
+            <if test="skuCode != null and skuCode != ''">
+                sku_code = #{skuCode},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="stock != null">
+                stock = #{stock},
+            </if>
+            <if test="sp1 != null and sp1 != ''">
+                sp1 = #{sp1},
+            </if>
+            <if test="sp2 != null and sp2 != ''">
+                sp2 = #{sp2},
+            </if>
+            <if test="sp3 != null and sp3 != ''">
+                sp3 = #{sp3},
+            </if>
+            <if test="pic != null and pic != ''">
+                pic = #{pic},
+            </if>
+            <if test="sale != null">
+                sale = #{sale},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mall.sku_stock where id = #{id}
+    </delete>
+
+</mapper>

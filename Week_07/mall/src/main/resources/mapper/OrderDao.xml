@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzy.mall.dao.OrderDao">
+
+    <resultMap type="com.xzy.mall.entity.Order" id="OrderMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="orderSn" column="order_sn" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="totalAmount" column="total_amount" jdbcType="INTEGER"/>
+        <result property="payAmount" column="pay_amount" jdbcType="INTEGER"/>
+        <result property="freightAmount" column="freight_amount" jdbcType="INTEGER"/>
+        <result property="payType" column="pay_type" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="orderType" column="order_type" jdbcType="INTEGER"/>
+        <result property="deliveryCompany" column="delivery_company" jdbcType="VARCHAR"/>
+        <result property="deliverySn" column="delivery_sn" jdbcType="VARCHAR"/>
+        <result property="autoConfirmDay" column="auto_confirm_day" jdbcType="INTEGER"/>
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
+        <result property="receiverPhone" column="receiver_phone" jdbcType="VARCHAR"/>
+        <result property="receiverPostCode" column="receiver_post_code" jdbcType="VARCHAR"/>
+        <result property="receiverProvince" column="receiver_province" jdbcType="VARCHAR"/>
+        <result property="receiverCity" column="receiver_city" jdbcType="VARCHAR"/>
+        <result property="receiverRegion" column="receiver_region" jdbcType="VARCHAR"/>
+        <result property="receiverDetailAddress" column="receiver_detail_address" jdbcType="VARCHAR"/>
+        <result property="note" column="note" jdbcType="VARCHAR"/>
+        <result property="confirmStatus" column="confirm_status" jdbcType="INTEGER"/>
+        <result property="deleteStatus" column="delete_status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="paymentTime" column="payment_time" jdbcType="TIMESTAMP"/>
+        <result property="deliveryTime" column="delivery_time" jdbcType="TIMESTAMP"/>
+        <result property="receiveTime" column="receive_time" jdbcType="TIMESTAMP"/>
+        <result property="commentTime" column="comment_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OrderMap">
+        select
+          id, order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status, order_type, delivery_company, delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code, receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, create_time, payment_time, delivery_time, receive_time, comment_time, update_time
+        from mall.order
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OrderMap">
+        select
+          id, order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status, order_type, delivery_company, delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code, receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, create_time, payment_time, delivery_time, receive_time, comment_time, update_time
+        from mall.order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="OrderMap">
+        select
+        id, order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status, order_type, delivery_company,
+        delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code, receiver_province,
+        receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, create_time,
+        payment_time, delivery_time, receive_time, comment_time, update_time
+        from mall.order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="orderSn != null and orderSn != ''">
+                and order_sn = #{orderSn}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="totalAmount != null">
+                and total_amount = #{totalAmount}
+            </if>
+            <if test="payAmount != null">
+                and pay_amount = #{payAmount}
+            </if>
+            <if test="freightAmount != null">
+                and freight_amount = #{freightAmount}
+            </if>
+            <if test="payType != null">
+                and pay_type = #{payType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="orderType != null">
+                and order_type = #{orderType}
+            </if>
+            <if test="deliveryCompany != null and deliveryCompany != ''">
+                and delivery_company = #{deliveryCompany}
+            </if>
+            <if test="deliverySn != null and deliverySn != ''">
+                and delivery_sn = #{deliverySn}
+            </if>
+            <if test="autoConfirmDay != null">
+                and auto_confirm_day = #{autoConfirmDay}
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                and receiver_name = #{receiverName}
+            </if>
+            <if test="receiverPhone != null and receiverPhone != ''">
+                and receiver_phone = #{receiverPhone}
+            </if>
+            <if test="receiverPostCode != null and receiverPostCode != ''">
+                and receiver_post_code = #{receiverPostCode}
+            </if>
+            <if test="receiverProvince != null and receiverProvince != ''">
+                and receiver_province = #{receiverProvince}
+            </if>
+            <if test="receiverCity != null and receiverCity != ''">
+                and receiver_city = #{receiverCity}
+            </if>
+            <if test="receiverRegion != null and receiverRegion != ''">
+                and receiver_region = #{receiverRegion}
+            </if>
+            <if test="receiverDetailAddress != null and receiverDetailAddress != ''">
+                and receiver_detail_address = #{receiverDetailAddress}
+            </if>
+            <if test="note != null and note != ''">
+                and note = #{note}
+            </if>
+            <if test="confirmStatus != null">
+                and confirm_status = #{confirmStatus}
+            </if>
+            <if test="deleteStatus != null">
+                and delete_status = #{deleteStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="paymentTime != null">
+                and payment_time = #{paymentTime}
+            </if>
+            <if test="deliveryTime != null">
+                and delivery_time = #{deliveryTime}
+            </if>
+            <if test="receiveTime != null">
+                and receive_time = #{receiveTime}
+            </if>
+            <if test="commentTime != null">
+                and comment_time = #{commentTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order(id,order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status, order_type, delivery_company, delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code, receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, create_time, payment_time, delivery_time, receive_time, comment_time, update_time)
+        values (#{id}, #{orderSn}, #{userId}, #{totalAmount}, #{payAmount}, #{freightAmount}, #{payType}, #{status}, #{orderType}, #{deliveryCompany}, #{deliverySn}, #{autoConfirmDay}, #{receiverName}, #{receiverPhone}, #{receiverPostCode}, #{receiverProvince}, #{receiverCity}, #{receiverRegion}, #{receiverDetailAddress}, #{note}, #{confirmStatus}, #{deleteStatus}, #{createTime}, #{paymentTime}, #{deliveryTime}, #{receiveTime}, #{commentTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order(id, order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status,
+        order_type, delivery_company, delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code,
+        receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status,
+        create_time, payment_time, delivery_time, receive_time, comment_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.orderSn}, #{entity.userId}, #{entity.totalAmount}, #{entity.payAmount}, #{entity.freightAmount},
+            #{entity.payType}, #{entity.status}, #{entity.orderType}, #{entity.deliveryCompany}, #{entity.deliverySn},
+            #{entity.autoConfirmDay}, #{entity.receiverName}, #{entity.receiverPhone}, #{entity.receiverPostCode},
+            #{entity.receiverProvince}, #{entity.receiverCity}, #{entity.receiverRegion},
+            #{entity.receiverDetailAddress}, #{entity.note}, #{entity.confirmStatus}, #{entity.deleteStatus},
+            #{entity.createTime}, #{entity.paymentTime}, #{entity.deliveryTime}, #{entity.receiveTime},
+            #{entity.commentTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mall.order(order_sn, user_id, total_amount, pay_amount, freight_amount, pay_type, status,
+        order_type, delivery_company, delivery_sn, auto_confirm_day, receiver_name, receiver_phone, receiver_post_code,
+        receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status,
+        create_time, payment_time, delivery_time, receive_time, comment_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderSn}, #{entity.userId}, #{entity.totalAmount}, #{entity.payAmount}, #{entity.freightAmount},
+            #{entity.payType}, #{entity.status}, #{entity.orderType}, #{entity.deliveryCompany}, #{entity.deliverySn},
+            #{entity.autoConfirmDay}, #{entity.receiverName}, #{entity.receiverPhone}, #{entity.receiverPostCode},
+            #{entity.receiverProvince}, #{entity.receiverCity}, #{entity.receiverRegion},
+            #{entity.receiverDetailAddress}, #{entity.note}, #{entity.confirmStatus}, #{entity.deleteStatus},
+            #{entity.createTime}, #{entity.paymentTime}, #{entity.deliveryTime}, #{entity.receiveTime},
+            #{entity.commentTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        order_sn = values(order_sn) , user_id = values(user_id) , total_amount = values(total_amount) , pay_amount =
+        values(pay_amount) , freight_amount = values(freight_amount) , pay_type = values(pay_type) , status =
+        values(status) , order_type = values(order_type) , delivery_company = values(delivery_company) , delivery_sn =
+        values(delivery_sn) , auto_confirm_day = values(auto_confirm_day) , receiver_name = values(receiver_name) ,
+        receiver_phone = values(receiver_phone) , receiver_post_code = values(receiver_post_code) , receiver_province =
+        values(receiver_province) , receiver_city = values(receiver_city) , receiver_region = values(receiver_region) ,
+        receiver_detail_address = values(receiver_detail_address) , note = values(note) , confirm_status =
+        values(confirm_status) , delete_status = values(delete_status) , create_time = values(create_time) ,
+        payment_time = values(payment_time) , delivery_time = values(delivery_time) , receive_time =
+        values(receive_time) , comment_time = values(comment_time) , update_time = values(update_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mall.order
+        <set>
+            <if test="orderSn != null and orderSn != ''">
+                order_sn = #{orderSn},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="totalAmount != null">
+                total_amount = #{totalAmount},
+            </if>
+            <if test="payAmount != null">
+                pay_amount = #{payAmount},
+            </if>
+            <if test="freightAmount != null">
+                freight_amount = #{freightAmount},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="orderType != null">
+                order_type = #{orderType},
+            </if>
+            <if test="deliveryCompany != null and deliveryCompany != ''">
+                delivery_company = #{deliveryCompany},
+            </if>
+            <if test="deliverySn != null and deliverySn != ''">
+                delivery_sn = #{deliverySn},
+            </if>
+            <if test="autoConfirmDay != null">
+                auto_confirm_day = #{autoConfirmDay},
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                receiver_name = #{receiverName},
+            </if>
+            <if test="receiverPhone != null and receiverPhone != ''">
+                receiver_phone = #{receiverPhone},
+            </if>
+            <if test="receiverPostCode != null and receiverPostCode != ''">
+                receiver_post_code = #{receiverPostCode},
+            </if>
+            <if test="receiverProvince != null and receiverProvince != ''">
+                receiver_province = #{receiverProvince},
+            </if>
+            <if test="receiverCity != null and receiverCity != ''">
+                receiver_city = #{receiverCity},
+            </if>
+            <if test="receiverRegion != null and receiverRegion != ''">
+                receiver_region = #{receiverRegion},
+            </if>
+            <if test="receiverDetailAddress != null and receiverDetailAddress != ''">
+                receiver_detail_address = #{receiverDetailAddress},
+            </if>
+            <if test="note != null and note != ''">
+                note = #{note},
+            </if>
+            <if test="confirmStatus != null">
+                confirm_status = #{confirmStatus},
+            </if>
+            <if test="deleteStatus != null">
+                delete_status = #{deleteStatus},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="paymentTime != null">
+                payment_time = #{paymentTime},
+            </if>
+            <if test="deliveryTime != null">
+                delivery_time = #{deliveryTime},
+            </if>
+            <if test="receiveTime != null">
+                receive_time = #{receiveTime},
+            </if>
+            <if test="commentTime != null">
+                comment_time = #{commentTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mall.order where id = #{id}
+    </delete>
+
+</mapper>
