@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mysql-master:
+    image: mysql:5.7
+    container_name: mysql-master
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./mysql/master/my.cnf:/etc/my.cnf"
+    links:
+      - mysql-slave
+
+  mysql-slave:
+    image: mysql:5.7
+    container_name: mysql-slave
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3308:3306"
+    volumes:
+      - "./mysql/slave/my.cnf:/etc/my.cnf"
