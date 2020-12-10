@@ -1,0 +1,31 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/demo_ds_0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password:
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/demo_ds_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password:
+    rules:
+      sharding:
+        tables:
+          t_user:
+            actual-data-nodes: ds$->{0..1}.t_user
+            key-generate-strategy:
+              column: user_id
+              key-generator-name: snowflake
+            database-strategy:
+              inline:
+                sharding-column: user_id
+                algorithm-expression: ds$->{user_id % 2}
+
+
+
